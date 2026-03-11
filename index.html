@@ -34,18 +34,29 @@
 
     body {
       font-family: 'Nunito', 'Noto Sans KR', -apple-system, sans-serif;
-      background: var(--dominos-blue);
       min-height: 100vh;
       color: var(--dominos-text);
       overflow-x: hidden;
       position: relative;
+      background: #1a0f24;
     }
 
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 30%);
+      background:
+        radial-gradient(ellipse 120% 80% at 70% 20%, rgba(180, 120, 60, 0.25) 0%, transparent 50%),
+        radial-gradient(ellipse 100% 60% at 30% 80%, rgba(100, 60, 120, 0.2) 0%, transparent 45%),
+        linear-gradient(180deg, #2d1b4e 0%, #1a0f24 40%, #0d0818 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
       pointer-events: none;
       z-index: 0;
     }
@@ -56,8 +67,8 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      border-bottom: 3px solid rgba(255,255,255,0.25);
-      background: var(--dominos-blue);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      background: rgba(26, 15, 36, 0.85);
       position: relative;
       z-index: 1;
     }
@@ -66,7 +77,7 @@
       font-family: 'Nunito', 'Noto Sans KR', sans-serif;
       font-size: 0.9rem;
       font-weight: 700;
-      color: var(--dominos-white);
+      color: rgba(255,255,255,0.9);
       background: none;
       border: none;
       cursor: pointer;
@@ -93,7 +104,7 @@
       font-family: 'Nunito', 'Noto Sans KR', sans-serif;
       font-size: 1rem;
       font-weight: 700;
-      color: var(--dominos-white);
+      color: rgba(255, 220, 150, 0.95);
       margin-bottom: 0.2rem;
       letter-spacing: 0.05em;
     }
@@ -103,8 +114,9 @@
       font-weight: 800;
       font-size: 3rem;
       letter-spacing: 0.08em;
-      color: var(--dominos-white);
+      color: #fff;
       line-height: 1;
+      text-shadow: 0 0 24px rgba(255, 200, 100, 0.4);
     }
 
     .logo-sub {
@@ -112,25 +124,26 @@
       font-size: 0.9rem;
       font-weight: 700;
       letter-spacing: 0.2em;
-      color: rgba(255,255,255,0.9);
+      color: rgba(255,255,255,0.85);
       margin-top: 0.25rem;
     }
 
     .card {
-      background: var(--dominos-white);
-      border: 3px solid rgba(255,255,255,0.5);
+      background: rgba(40, 25, 60, 0.6);
+      border: 1px solid rgba(255, 220, 150, 0.25);
       border-radius: var(--radius);
       padding: 2rem 2.25rem;
       width: 100%;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
       position: relative;
+      backdrop-filter: blur(8px);
     }
 
     .field-label {
       font-family: 'Nunito', 'Noto Sans KR', sans-serif;
       font-size: 0.9rem;
       font-weight: 800;
-      color: var(--dominos-blue);
+      color: rgba(255, 220, 150, 0.95);
       margin-bottom: 0.5rem;
       display: block;
       text-transform: uppercase;
@@ -142,91 +155,69 @@
       display: block;
       width: 2em;
       height: 3px;
-      background: var(--dominos-red);
+      background: linear-gradient(90deg, rgba(255, 200, 100, 0.8), transparent);
       margin-top: 0.25rem;
       border-radius: 2px;
     }
 
-    .slot-machine-panel {
+    .stage-wrap {
       display: flex;
-      align-items: stretch;
+      align-items: center;
       justify-content: center;
-      gap: 0;
+      gap: 1rem;
       margin-bottom: 1rem;
       width: 100%;
+      min-height: 200px;
     }
-    .result-box {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .pizza-box {
-      position: relative;
-      background: var(--dominos-red);
-      border-radius: var(--radius-sm);
-      overflow: visible;
-      min-height: 100px;
-      perspective: 420px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    }
-    .pizza-box-lid {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 52%;
-      background: linear-gradient(180deg, var(--dominos-red-dark) 0%, var(--dominos-red) 100%);
-      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-      transform-origin: top center;
-      transform-style: preserve-3d;
-      transition: transform 0.55s cubic-bezier(0.34, 1.2, 0.64, 1);
-      z-index: 2;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
+    .character-area {
+      flex-shrink: 0;
+      width: 160px;
+      height: 200px;
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      padding-bottom: 0.5rem;
-      box-sizing: border-box;
-    }
-    .pizza-box-lid::after {
-      content: 'HOT!';
-      font-family: 'Nunito', 'Noto Sans KR', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 800;
-      color: rgba(255,255,255,0.9);
-      letter-spacing: 0.1em;
-    }
-    .pizza-box-lid.open {
-      transform: rotateX(-105deg);
-    }
-    .pizza-box-content {
       position: relative;
-      z-index: 1;
-      padding: 1rem 1rem 1.1rem;
+    }
+    .character-area img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      object-position: bottom;
+      filter: drop-shadow(0 4px 20px rgba(0,0,0,0.4));
+    }
+    .character-area::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(120, 80, 160, 0.15) 0%, transparent 50%);
+      border-radius: 12px;
+      pointer-events: none;
+    }
+    .cards-stage {
+      flex: 1;
+      min-width: 0;
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
       justify-content: center;
-      gap: 0.35rem;
-      min-height: 88px;
+      gap: 0.4rem;
+      padding: 1rem 0;
     }
     .result-area {
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
       justify-content: center;
-      gap: 0.35rem;
+      gap: 0.4rem;
     }
     .bonus-area {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.3rem;
-      margin-left: 0.4rem;
+      margin-left: 0.5rem;
       padding-left: 0.5rem;
-      border-left: 2px solid rgba(255,255,255,0.4);
+      border-left: 2px solid rgba(255, 220, 150, 0.35);
       flex-shrink: 0;
     }
 
@@ -234,7 +225,7 @@
       font-family: 'Nunito', 'Noto Sans KR', sans-serif;
       font-size: 0.85rem;
       font-weight: 800;
-      color: var(--dominos-red);
+      color: rgba(255, 220, 150, 0.95);
       text-transform: uppercase;
       letter-spacing: 0.1em;
     }
@@ -263,64 +254,46 @@
       border: 2px solid rgba(255,255,255,0.9);
     }
 
-    .slot-window {
-      width: 44px;
-      height: 52px;
-      border: 3px solid var(--dominos-blue);
-      border-radius: 8px;
-      background: var(--dominos-red);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    .number-card {
+      width: 48px;
+      height: 64px;
+      border-radius: 6px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-    }
-    .slot-window .slot-num {
+      background: linear-gradient(145deg, #f5e6c8 0%, #d4a84b 50%, #b8860b 100%);
+      border: 2px solid rgba(255, 235, 180, 0.9);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
       font-family: 'Nunito', 'Noto Sans KR', sans-serif;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 800;
+      color: #2d1b4e;
       line-height: 1;
-      color: var(--dominos-white);
-      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
-    .slot-window.bonus {
-      background: var(--dominos-blue);
-      border-color: var(--dominos-red);
+    .number-card.card-throw {
+      animation: cardThrow 0.5s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
     }
-    .slot-window.bonus .slot-num {
-      color: var(--dominos-white);
+    @keyframes cardThrow {
+      from {
+        transform: translateX(-140px) rotate(-18deg);
+        opacity: 0.5;
+      }
+      to {
+        transform: translateX(0) rotate(0);
+        opacity: 1;
+      }
     }
-    .slot-window.placeholder {
-      background: #e8e8e8;
-      border-color: #ccc;
+    .number-card.bonus {
+      background: linear-gradient(145deg, #c8d4f5 0%, #6b8cce 50%, #4a6bb5 100%);
+      border-color: rgba(200, 220, 255, 0.9);
+      color: #1a1530;
     }
-    .slot-window.placeholder .slot-num {
-      color: var(--dominos-text-muted);
+    .number-card.placeholder {
+      background: rgba(80, 60, 120, 0.4);
+      border: 2px dashed rgba(255, 220, 150, 0.4);
+      color: rgba(255,255,255,0.5);
       font-size: 1.2rem;
-    }
-    .result-area .slot-window,
-    .result-box .slot-window {
-      margin: 0 2px;
-    }
-    .pizza-box .slot-window {
-      background: var(--dominos-white);
-      border-color: rgba(255,255,255,0.9);
-      color: var(--dominos-red);
-    }
-    .pizza-box .slot-window.bonus {
-      background: var(--dominos-white);
-      color: var(--dominos-blue);
-      border-color: rgba(255,255,255,0.9);
-    }
-    .pizza-box .slot-window.placeholder {
-      background: rgba(255,255,255,0.4);
-      color: rgba(255,255,255,0.9);
-    }
-    .pizza-box .slot-num {
-      color: inherit;
-    }
-    .pizza-box .bonus-label {
-      color: rgba(255,255,255,0.95);
     }
 
     .slot-lever-wrap {
@@ -334,14 +307,14 @@
     .slot-lever {
       width: 14px;
       height: 72px;
-      background: var(--dominos-red);
+      background: linear-gradient(90deg, #6b5b7a 0%, #8b7a9a 100%);
       border-radius: 7px;
       position: relative;
       transform-origin: center bottom;
       transform: rotate(-18deg);
       transition: transform 0.25s cubic-bezier(0.34, 1.2, 0.64, 1);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      border: 2px solid var(--dominos-red-dark);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+      border: 2px solid rgba(255, 220, 150, 0.4);
     }
     .slot-lever::after {
       content: '';
@@ -352,9 +325,9 @@
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background: var(--dominos-blue);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      border: 2px solid var(--dominos-blue-bright);
+      background: linear-gradient(145deg, #d4a84b 0%, #b8860b 100%);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      border: 2px solid rgba(255, 235, 180, 0.8);
     }
     .slot-lever.pulled {
       transform: rotate(32deg);
@@ -389,28 +362,28 @@
       font-size: 1.1rem;
       font-weight: 800;
       letter-spacing: 0.08em;
-      color: var(--dominos-white);
-      background: var(--dominos-red);
-      border: 3px solid var(--dominos-red-dark);
+      color: #1a0f24;
+      background: linear-gradient(180deg, #f5e6c8 0%, #d4a84b 100%);
+      border: 2px solid rgba(255, 235, 180, 0.8);
       border-radius: var(--radius);
       cursor: pointer;
       transition: all 0.2s ease;
       margin-bottom: 0.5rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
     }
     .save-status {
       margin: 0.25rem 0 0.5rem;
       font-size: 0.85rem;
-      color: var(--dominos-blue);
+      color: rgba(255, 220, 150, 0.9);
       min-height: 1.2em;
     }
     .save-status.error {
-      color: var(--dominos-red);
+      color: #f5a0a0;
     }
 
     .btn-generate:hover {
-      background: var(--dominos-red-dark);
-      box-shadow: 0 4px 12px rgba(227, 24, 55, 0.3);
+      background: linear-gradient(180deg, #fff0d0 0%, #e0b858 100%);
+      box-shadow: 0 4px 20px rgba(212, 168, 75, 0.4);
     }
     .btn-generate:disabled {
       opacity: 0.6;
@@ -420,7 +393,7 @@
     .options {
       margin-top: 1.5rem;
       padding-top: 1.5rem;
-      border-top: 2px solid #e0e0e0;
+      border-top: 1px solid rgba(255, 220, 150, 0.2);
     }
 
     .option-row {
@@ -438,24 +411,24 @@
       font-family: 'Nunito', 'Noto Sans KR', sans-serif;
       font-size: 0.9rem;
       font-weight: 700;
-      color: var(--dominos-text);
+      color: rgba(255, 255, 255, 0.9);
     }
 
     .option-row input[type="number"] {
       width: 72px;
       padding: 0.5rem 0.75rem;
       font-size: 0.9rem;
-      background: var(--dominos-white);
-      border: 2px solid #ddd;
+      background: rgba(60, 40, 80, 0.5);
+      border: 1px solid rgba(255, 220, 150, 0.3);
       border-radius: var(--radius-sm);
-      color: var(--dominos-text);
+      color: #fff;
       font-family: inherit;
     }
 
     .option-row input:focus {
       outline: none;
-      border-color: var(--dominos-blue);
-      box-shadow: 0 0 0 3px rgba(0, 100, 145, 0.15);
+      border-color: rgba(255, 220, 150, 0.6);
+      box-shadow: 0 0 0 2px rgba(255, 220, 150, 0.2);
     }
 
     .sets-container {
@@ -466,7 +439,7 @@
       font-family: 'Nunito', 'Noto Sans KR', sans-serif;
       font-size: 0.9rem;
       font-weight: 800;
-      color: var(--dominos-blue);
+      color: rgba(255, 220, 150, 0.95);
       margin-bottom: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -502,12 +475,12 @@
     .card-footer {
       margin-top: 1.5rem;
       padding-top: 1.25rem;
-      border-top: 2px solid #e0e0e0;
+      border-top: 1px solid rgba(255, 220, 150, 0.2);
       text-align: center;
       font-family: 'Nunito', 'Noto Sans KR', sans-serif;
       font-size: 0.8rem;
       font-weight: 700;
-      color: var(--dominos-text-muted);
+      color: rgba(255, 255, 255, 0.6);
     }
 
     .card-footer a {
@@ -517,7 +490,7 @@
 
     .card-footer .divider {
       margin: 0 0.5rem;
-      color: #bbb;
+      color: rgba(255, 255, 255, 0.35);
     }
 
     .page-footer {
@@ -526,102 +499,13 @@
       font-family: 'Nunito', 'Noto Sans KR', sans-serif;
       font-size: 0.8rem;
       font-weight: 700;
-      color: rgba(255,255,255,0.9);
+      color: rgba(255, 255, 255, 0.75);
     }
 
     .page-footer .divider {
       margin: 0 0.4rem;
     }
 
-    .lotto-2026-section {
-      margin-top: 2.5rem;
-      width: 100%;
-      max-width: 600px;
-    }
-
-    .lotto-2026-title {
-      font-family: 'Nunito', 'Noto Sans KR', sans-serif;
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--dominos-white);
-      margin-bottom: 0.75rem;
-      padding-bottom: 0.35rem;
-      border-bottom: 3px solid rgba(255,255,255,0.4);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .lotto-2026-meta {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.85);
-      margin-bottom: 0.6rem;
-    }
-
-    .lotto-2026-balls {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-    }
-
-    .lotto-2026-balls .ball {
-      width: 38px;
-      height: 38px;
-      font-size: 0.9rem;
-    }
-
-    .lotto-2026-balls .bonus-label {
-      font-size: 0.75rem;
-      margin: 0 0.2rem;
-    }
-
-    .lotto-recent-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-
-    .lotto-recent-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.35rem;
-    }
-
-    .lotto-recent-round {
-      font-family: 'Nunito', 'Noto Sans KR', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      color: var(--dominos-white);
-      min-width: 4rem;
-      flex-shrink: 0;
-    }
-
-    .lotto-recent-date {
-      font-family: 'Nunito', 'Noto Sans KR', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: rgba(255,255,255,0.9);
-      min-width: 3.8rem;
-      flex-shrink: 0;
-    }
-
-    .lotto-recent-row .ball {
-      width: 28px;
-      height: 28px;
-      font-size: 0.75rem;
-      flex-shrink: 0;
-    }
-
-    .lotto-recent-row .bonus-label {
-      font-size: 0.65rem;
-      margin: 0 0.1rem;
-      color: rgba(255,255,255,0.8);
-      flex-shrink: 0;
-    }
   </style>
 </head>
 <body>
@@ -638,24 +522,22 @@
 
     <div class="card">
       <span class="field-label">추천 번호</span>
-      <div class="slot-machine-panel">
-        <div class="result-box" id="resultBox">
-          <div class="pizza-box" id="pizzaBox">
-            <div class="pizza-box-lid open" id="pizzaBoxLid"></div>
-            <div class="pizza-box-content">
-              <div class="result-area" id="resultArea">
-                <span class="slot-window placeholder"><span class="slot-num">?</span></span>
-                <span class="slot-window placeholder"><span class="slot-num">?</span></span>
-                <span class="slot-window placeholder"><span class="slot-num">?</span></span>
-                <span class="slot-window placeholder"><span class="slot-num">?</span></span>
-                <span class="slot-window placeholder"><span class="slot-num">?</span></span>
-                <span class="slot-window placeholder"><span class="slot-num">?</span></span>
-              </div>
-              <div class="bonus-area" id="bonusArea">
-                <span class="bonus-label">보너스</span>
-                <span class="slot-window bonus placeholder"><span class="slot-num">?</span></span>
-              </div>
-            </div>
+      <div class="stage-wrap">
+        <div class="character-area">
+          <img src="assets/character.png" alt="카드를 던지는 캐릭터" id="characterImg" onerror="this.style.display='none'">
+        </div>
+        <div class="cards-stage" id="resultBox">
+          <div class="result-area" id="resultArea">
+            <span class="number-card placeholder">?</span>
+            <span class="number-card placeholder">?</span>
+            <span class="number-card placeholder">?</span>
+            <span class="number-card placeholder">?</span>
+            <span class="number-card placeholder">?</span>
+            <span class="number-card placeholder">?</span>
+          </div>
+          <div class="bonus-area" id="bonusArea">
+            <span class="bonus-label">보너스</span>
+            <span class="number-card bonus placeholder">?</span>
           </div>
         </div>
         <div class="slot-lever-wrap" id="slotLeverWrap" role="button" tabindex="0" aria-label="레버 당기기">
@@ -681,11 +563,6 @@
         <span>참고용</span><span class="divider">|</span><span>당첨 보장 없음</span><span class="divider">|</span><span>나눔로또</span>
       </div>
     </div>
-
-    <section class="lotto-2026-section" aria-label="최근 10회 로또 1등 당첨번호">
-      <h2 class="lotto-2026-title">최근 10회 1등 당첨번호</h2>
-      <div class="lotto-recent-list" id="lottoRecentList"></div>
-    </section>
 
     <footer class="page-footer">
       1~45 중 무작위 6개 + 보너스 번호를 추천합니다
@@ -768,14 +645,11 @@
       return ball;
     }
 
-    function createSlotWindow(num, isBonus) {
-      const wrap = document.createElement('span');
-      wrap.className = 'slot-window' + (isBonus ? ' bonus' : '');
-      const span = document.createElement('span');
-      span.className = 'slot-num';
-      span.textContent = num;
-      wrap.appendChild(span);
-      return wrap;
+    function createNumberCard(num, isBonus, withThrow) {
+      const card = document.createElement('span');
+      card.className = 'number-card' + (isBonus ? ' bonus' : '') + (withThrow ? ' card-throw' : '');
+      card.textContent = num;
+      return card;
     }
 
     function sleep(ms) {
@@ -786,47 +660,44 @@
       const main = sets[0];
       const resultArea = document.getElementById('resultArea');
       const bonusArea = document.getElementById('bonusArea');
-      let bonusEl = bonusArea.querySelector('.slot-window.bonus') || bonusArea.querySelector('.slot-window');
+      let bonusEl = bonusArea.querySelector('.number-card.bonus') || bonusArea.querySelector('.number-card');
       const btn = document.getElementById('btnGenerate');
       const leverWrap = document.getElementById('slotLeverWrap');
       const resultBox = document.getElementById('resultBox');
-      const lid = document.getElementById('pizzaBoxLid');
 
       btn.disabled = true;
       if (leverWrap) leverWrap.setAttribute('aria-disabled', 'true');
       resultBox.classList.add('drawing');
-      if (lid) lid.classList.remove('open');
 
       resultArea.innerHTML = '';
       for (let i = 0; i < PICK; i++) {
         const ph = document.createElement('span');
-        ph.className = 'slot-window placeholder';
-        ph.innerHTML = '<span class="slot-num">?</span>';
+        ph.className = 'number-card placeholder';
+        ph.textContent = '?';
         resultArea.appendChild(ph);
       }
       if (bonusEl) {
-        bonusEl.className = 'slot-window bonus placeholder';
-        bonusEl.innerHTML = '<span class="slot-num">?</span>';
+        bonusEl.className = 'number-card bonus placeholder';
+        bonusEl.textContent = '?';
       } else {
         bonusEl = document.createElement('span');
-        bonusEl.className = 'slot-window bonus placeholder';
-        bonusEl.innerHTML = '<span class="slot-num">?</span>';
+        bonusEl.className = 'number-card bonus placeholder';
+        bonusEl.textContent = '?';
         bonusArea.appendChild(bonusEl);
       }
 
-      await sleep(320);
-      if (lid) lid.classList.add('open');
-      await sleep(580);
+      await sleep(400);
 
       for (let i = 0; i < PICK; i++) {
         const slot = resultArea.children[i];
-        const win = createSlotWindow(main.numbers[i], false);
-        slot.replaceWith(win);
-        await sleep(130);
+        const card = createNumberCard(main.numbers[i], false, true);
+        slot.replaceWith(card);
+        await sleep(420);
       }
 
-      const bonusWin = createSlotWindow(main.bonus, true);
-      bonusEl.replaceWith(bonusWin);
+      const bonusCard = createNumberCard(main.bonus, true, true);
+      bonusEl.replaceWith(bonusCard);
+      await sleep(450);
 
       saveDrawsToSupabase(sets);
       resultBox.classList.remove('drawing');
@@ -876,14 +747,14 @@
     function renderMainBalls(numbers, bonus) {
       const area = document.getElementById('resultArea');
       area.innerHTML = '';
-      numbers.forEach((num) => area.appendChild(createSlotWindow(num, false)));
+      numbers.forEach((num) => area.appendChild(createNumberCard(num, false, false)));
       const bonusArea = document.getElementById('bonusArea');
-      const bonusEl = bonusArea.querySelector('.slot-window.bonus') || bonusArea.querySelector('.slot-window');
+      const bonusEl = bonusArea.querySelector('.number-card.bonus') || bonusArea.querySelector('.number-card');
       if (bonusEl) {
-        bonusEl.className = 'slot-window bonus';
-        bonusEl.innerHTML = '<span class="slot-num">' + bonus + '</span>';
+        bonusEl.className = 'number-card bonus';
+        bonusEl.textContent = bonus;
       } else {
-        bonusArea.appendChild(createSlotWindow(bonus, true));
+        bonusArea.appendChild(createNumberCard(bonus, true, false));
       }
     }
 
@@ -950,60 +821,11 @@
       });
     })();
 
-    // 최근 10회 1등 당첨번호 (웹 검색 기준)
-    const LOTTO_RECENT_10 = [
-      { round: 1214, date: '2026.3.7', numbers: [10, 15, 19, 27, 30, 33], bonus: 14 },
-      { round: 1213, date: '2026.2.28', numbers: [5, 11, 25, 27, 36, 38], bonus: 2 },
-      { round: 1212, date: '2026.2.21', numbers: [5, 8, 25, 31, 41, 44], bonus: 45 },
-      { round: 1211, date: '2026.2.14', numbers: [23, 26, 27, 35, 38, 40], bonus: 10 },
-      { round: 1210, date: '2026.2.7', numbers: [1, 7, 9, 17, 27, 38], bonus: 31 },
-      { round: 1209, date: '2026.1.31', numbers: [2, 17, 20, 35, 37, 39], bonus: 24 },
-      { round: 1208, date: '2026.1.24', numbers: [6, 27, 30, 36, 38, 42], bonus: 25 },
-      { round: 1207, date: '2026.1.17', numbers: [10, 22, 24, 27, 38, 45], bonus: 11 },
-      { round: 1206, date: '2026.1.10', numbers: [1, 3, 17, 26, 27, 42], bonus: 23 },
-      { round: 1205, date: '2026.1.3', numbers: [1, 4, 16, 23, 31, 41], bonus: 2 }
-    ];
-
-    function createHistoryBall(num) {
-      const ball = document.createElement('span');
-      ball.className = `ball ${getBallClass(Math.floor((num - 1) / 8))}`;
-      ball.textContent = num;
-      return ball;
-    }
-
-    function renderLottoRecent() {
-      const list = document.getElementById('lottoRecentList');
-      list.innerHTML = '';
-      LOTTO_RECENT_10.forEach(function (row) {
-        const wrap = document.createElement('div');
-        wrap.className = 'lotto-recent-row';
-        const roundEl = document.createElement('span');
-        roundEl.className = 'lotto-recent-round';
-        roundEl.textContent = row.round + '회';
-        const dateEl = document.createElement('span');
-        dateEl.className = 'lotto-recent-date';
-        dateEl.textContent = row.date;
-        wrap.appendChild(roundEl);
-        wrap.appendChild(dateEl);
-        row.numbers.forEach(function (n) { wrap.appendChild(createHistoryBall(n)); });
-        const bonusLabel = document.createElement('span');
-        bonusLabel.className = 'bonus-label';
-        bonusLabel.textContent = '보너스';
-        wrap.appendChild(bonusLabel);
-        const bonusBall = document.createElement('span');
-        bonusBall.className = 'ball bonus';
-        bonusBall.textContent = row.bonus;
-        wrap.appendChild(bonusBall);
-        list.appendChild(wrap);
-      });
-    }
-
     // 첫 화면: 번호만 표시 (추첨 연출 없이)
     (function init() {
       const set = generateOneSet();
       renderMainBalls(set.numbers, set.bonus);
       document.getElementById('setsContainer').style.display = 'none';
-      renderLottoRecent();
     })();
   </script>
 </body>
