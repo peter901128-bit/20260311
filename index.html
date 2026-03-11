@@ -189,18 +189,26 @@
       margin-top: 0.2rem;
     }
 
+    .slot-machine-panel {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 1rem;
+    }
     .result-box {
       background: var(--vegas-screen);
       border: 2px solid var(--vegas-panel-border);
       border-radius: var(--radius-sm);
       padding: 1rem 1.25rem;
-      margin-bottom: 1rem;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
       gap: 0.4rem;
       box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+      flex: 1;
+      min-width: 0;
     }
 
     .result-area {
@@ -258,6 +266,83 @@
       border: 1px solid rgba(255,255,255,0.15);
     }
 
+    .slot-window {
+      width: 44px;
+      height: 52px;
+      border: 3px solid #1a1a1a;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #5a5a5a 0%, #3a3a3a 50%, #2a2a2a 100%);
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.6), 0 2px 0 rgba(255,255,255,0.1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .slot-window .slot-num {
+      font-family: 'Bebas Neue', 'Noto Sans KR', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      line-height: 1;
+      color: #fff;
+      text-shadow: 0 0 6px rgba(0,0,0,0.9), 0 0 2px #000, 1px 1px 0 #fff, -1px -1px 0 #fff, 0 1px 0 rgba(255,255,255,0.8);
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8));
+    }
+    .slot-window.bonus .slot-num {
+      color: var(--vegas-gold-bright);
+      text-shadow: 0 0 8px var(--vegas-glow-gold), 0 0 2px #000, 1px 1px 0 #1a0f0a, -1px -1px 0 #1a0f0a;
+    }
+    .slot-window.placeholder {
+      background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
+    }
+    .slot-window.placeholder .slot-num {
+      color: var(--vegas-text-muted);
+      font-size: 1.2rem;
+    }
+    .result-area .slot-window,
+    .result-box .slot-window {
+      margin: 0 2px;
+    }
+
+    .slot-lever-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .slot-lever {
+      width: 14px;
+      height: 72px;
+      background: linear-gradient(90deg, #2a2a2a 0%, #5a5a5a 30%, #6a6a6a 50%, #4a4a4a 70%, #2a2a2a 100%);
+      border-radius: 7px;
+      position: relative;
+      transform-origin: center bottom;
+      transform: rotate(-18deg);
+      transition: transform 0.25s cubic-bezier(0.34, 1.2, 0.64, 1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+    .slot-lever::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      margin-left: -10px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #4a4a4a, #1a1a1a);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.2);
+      border: 2px solid #0a0a0a;
+    }
+    .slot-lever.pulled {
+      transform: rotate(32deg);
+    }
+    .slot-lever-wrap[aria-disabled="true"] {
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
     .ball:hover {
       transform: scale(1.05);
     }
@@ -270,35 +355,37 @@
     }
 
     .reel-viewport {
-      width: 38px;
-      height: 38px;
+      width: 44px;
+      height: 52px;
       overflow: hidden;
-      border-radius: 50%;
-      background: var(--vegas-panel-border);
+      border-radius: 6px;
+      border: 2px solid #1a1a1a;
+      background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
       display: inline-flex;
       align-items: center;
       justify-content: center;
     }
     .reel-viewport.bonus-reel {
-      background: linear-gradient(145deg, var(--vegas-gold-bright), var(--vegas-gold-dim));
-      color: #1a0f0a;
+      background: linear-gradient(180deg, #5a4a20 0%, #3a3010 100%);
+      color: var(--vegas-gold-bright);
     }
     .reel-strip {
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 38px;
+      min-width: 44px;
       transition: transform 0.75s cubic-bezier(0.15, 0.85, 0.25, 1);
     }
     .reel-cell {
-      width: 38px;
-      height: 38px;
+      width: 44px;
+      height: 52px;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
-      font-size: 0.95rem;
+      font-weight: 900;
+      font-size: 1.3rem;
+      font-family: 'Bebas Neue', 'Noto Sans KR', sans-serif;
     }
 
     .ball-1 { background: radial-gradient(ellipse 75% 75% at 28% 28%, rgba(255,255,255,0.5), transparent 55%), linear-gradient(145deg, #e63946, #c41e3a); }
@@ -626,18 +713,23 @@
 
     <div class="card">
       <span class="field-label">추천 번호</span>
-      <div class="result-box" id="resultBox">
-        <div class="result-area" id="resultArea">
-          <span class="ball placeholder">?</span>
-          <span class="ball placeholder">?</span>
-          <span class="ball placeholder">?</span>
-          <span class="ball placeholder">?</span>
-          <span class="ball placeholder">?</span>
-          <span class="ball placeholder">?</span>
+      <div class="slot-machine-panel">
+        <div class="result-box" id="resultBox">
+          <div class="result-area" id="resultArea">
+            <span class="slot-window placeholder"><span class="slot-num">?</span></span>
+            <span class="slot-window placeholder"><span class="slot-num">?</span></span>
+            <span class="slot-window placeholder"><span class="slot-num">?</span></span>
+            <span class="slot-window placeholder"><span class="slot-num">?</span></span>
+            <span class="slot-window placeholder"><span class="slot-num">?</span></span>
+            <span class="slot-window placeholder"><span class="slot-num">?</span></span>
+          </div>
+          <div class="bonus-area" id="bonusArea">
+            <span class="bonus-label">보너스</span>
+            <span class="slot-window bonus placeholder"><span class="slot-num">?</span></span>
+          </div>
         </div>
-        <div class="bonus-area" id="bonusArea">
-          <span class="bonus-label">보너스</span>
-          <span class="ball bonus placeholder">?</span>
+        <div class="slot-lever-wrap" id="slotLeverWrap" role="button" tabindex="0" aria-label="레버 당기기">
+          <div class="slot-lever" id="slotLever"></div>
         </div>
       </div>
       <button type="button" class="btn-generate" id="btnGenerate">번호 뽑기</button>
@@ -720,7 +812,7 @@
     const PICK = 6;
     const BALL_CLASSES = ['ball-1', 'ball-2', 'ball-3', 'ball-4', 'ball-5', 'ball-6'];
     const REEL_ROUNDS = 4;
-    const REEL_CELL_HEIGHT = 38;
+    const REEL_CELL_HEIGHT = 52;
     const REEL_DURATION_MS = 750;
 
     function shuffle(array) {
@@ -760,6 +852,16 @@
       if (addRevealClass) ball.classList.add('reveal');
       ball.textContent = num;
       return ball;
+    }
+
+    function createSlotWindow(num, isBonus) {
+      const wrap = document.createElement('span');
+      wrap.className = 'slot-window' + (isBonus ? ' bonus' : '');
+      const span = document.createElement('span');
+      span.className = 'slot-num';
+      span.textContent = num;
+      wrap.appendChild(span);
+      return wrap;
     }
 
     function createReelStrip(finalNum, isBonus) {
@@ -813,27 +915,29 @@
       const main = sets[0];
       const resultArea = document.getElementById('resultArea');
       const bonusArea = document.getElementById('bonusArea');
-      let bonusEl = bonusArea.querySelector('.ball.bonus');
+      let bonusEl = bonusArea.querySelector('.slot-window.bonus') || bonusArea.querySelector('.slot-window');
       const btn = document.getElementById('btnGenerate');
+      const leverWrap = document.getElementById('slotLeverWrap');
       const resultBox = document.getElementById('resultBox');
 
       btn.disabled = true;
+      if (leverWrap) leverWrap.setAttribute('aria-disabled', 'true');
       resultBox.classList.add('drawing');
 
       resultArea.innerHTML = '';
       for (let i = 0; i < PICK; i++) {
         const ph = document.createElement('span');
-        ph.className = 'ball placeholder';
-        ph.textContent = '?';
+        ph.className = 'slot-window placeholder';
+        ph.innerHTML = '<span class="slot-num">?</span>';
         resultArea.appendChild(ph);
       }
       if (bonusEl) {
-        bonusEl.textContent = '?';
-        bonusEl.classList.add('placeholder');
+        bonusEl.className = 'slot-window bonus placeholder';
+        bonusEl.innerHTML = '<span class="slot-num">?</span>';
       } else {
         bonusEl = document.createElement('span');
-        bonusEl.className = 'ball bonus placeholder';
-        bonusEl.textContent = '?';
+        bonusEl.className = 'slot-window bonus placeholder';
+        bonusEl.innerHTML = '<span class="slot-num">?</span>';
         bonusArea.appendChild(bonusEl);
       }
 
@@ -843,19 +947,22 @@
         const reel = createReelStrip(num, false);
         slot.replaceWith(reel);
         await runReel(reel);
-        const ball = createBall(num);
-        reel.replaceWith(ball);
+        const win = createSlotWindow(num, false);
+        reel.replaceWith(win);
       }
 
       const bonusReel = createReelStrip(main.bonus, true);
       bonusEl.replaceWith(bonusReel);
       await runReel(bonusReel);
-      const bonusBall = createBonusBall(main.bonus);
-      bonusReel.replaceWith(bonusBall);
+      const bonusWin = createSlotWindow(main.bonus, true);
+      bonusReel.replaceWith(bonusWin);
 
       saveDrawsToSupabase(sets);
       resultBox.classList.remove('drawing');
       btn.disabled = false;
+      if (leverWrap) leverWrap.removeAttribute('aria-disabled');
+      var lever = document.getElementById('slotLever');
+      if (lever) lever.classList.remove('pulled');
     }
 
     function setSaveStatus(message, isError) {
@@ -902,14 +1009,14 @@
     function renderMainBalls(numbers, bonus) {
       const area = document.getElementById('resultArea');
       area.innerHTML = '';
-      numbers.forEach((num) => area.appendChild(createBall(num)));
+      numbers.forEach((num) => area.appendChild(createSlotWindow(num, false)));
       const bonusArea = document.getElementById('bonusArea');
-      const bonusEl = bonusArea.querySelector('.ball.bonus');
+      const bonusEl = bonusArea.querySelector('.slot-window.bonus') || bonusArea.querySelector('.slot-window');
       if (bonusEl) {
-        bonusEl.textContent = bonus;
-        bonusEl.classList.remove('placeholder');
+        bonusEl.className = 'slot-window bonus';
+        bonusEl.innerHTML = '<span class="slot-num">' + bonus + '</span>';
       } else {
-        bonusArea.appendChild(createBonusBall(bonus));
+        bonusArea.appendChild(createSlotWindow(bonus, true));
       }
     }
 
@@ -959,6 +1066,22 @@
     }
 
     document.getElementById('btnGenerate').addEventListener('click', runGenerate);
+
+    (function initLever() {
+      var wrap = document.getElementById('slotLeverWrap');
+      var lever = document.getElementById('slotLever');
+      if (!wrap || !lever) return;
+      function onLeverActivate() {
+        if (isDrawing) return;
+        if (wrap.getAttribute('aria-disabled') === 'true') return;
+        lever.classList.add('pulled');
+        setTimeout(function () { runGenerate(); }, 220);
+      }
+      wrap.addEventListener('click', onLeverActivate);
+      wrap.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onLeverActivate(); }
+      });
+    })();
 
     (function initLocalConfig() {
       try {
