@@ -272,6 +272,38 @@
       font-size: 1.1rem;
     }
 
+    .reel-viewport {
+      width: 38px;
+      height: 38px;
+      overflow: hidden;
+      border-radius: 50%;
+      background: var(--vegas-panel-border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .reel-viewport.bonus-reel {
+      background: linear-gradient(145deg, var(--vegas-gold-bright), var(--vegas-gold-dim));
+      color: #1a0f0a;
+    }
+    .reel-strip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 38px;
+      transition: transform 0.75s cubic-bezier(0.15, 0.85, 0.25, 1);
+    }
+    .reel-cell {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
     .ball-1 { background: linear-gradient(145deg, #e63946, #c41e3a); box-shadow: 0 0 12px rgba(196, 30, 58, 0.5), inset 0 1px 0 rgba(255,255,255,0.2); }
     .ball-2 { background: linear-gradient(145deg, #f4a261, #e76f51); box-shadow: 0 0 12px rgba(231, 111, 81, 0.5), inset 0 1px 0 rgba(255,255,255,0.2); }
     .ball-3 { background: linear-gradient(145deg, var(--vegas-gold-bright), var(--vegas-gold-dim)); color: #1a0f0a; box-shadow: 0 0 12px var(--vegas-glow-gold), inset 0 1px 0 rgba(255,255,255,0.4); }
@@ -353,6 +385,10 @@
     .btn-generate:hover {
       background: linear-gradient(180deg, #eb4d5c 0%, var(--vegas-sign-red-bright) 100%);
       box-shadow: 0 0 30px var(--vegas-glow-red);
+    }
+    .btn-generate:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
 
     .options {
@@ -669,6 +705,9 @@
     const MAX = 45;
     const PICK = 6;
     const BALL_CLASSES = ['ball-1', 'ball-2', 'ball-3', 'ball-4', 'ball-5', 'ball-6'];
+    const REEL_ROUNDS = 4;
+    const REEL_CELL_HEIGHT = 38;
+    const REEL_DURATION_MS = 750;
 
     function shuffle(array) {
       const arr = [...array];
@@ -707,6 +746,102 @@
       if (addRevealClass) ball.classList.add('reveal');
       ball.textContent = num;
       return ball;
+    }
+
+    function createReelStrip(finalNum, isBonus) {
+      const viewport = document.createElement('div');
+      viewport.className = 'reel-viewport' + (isBonus ? ' bonus-reel' : '');
+      const strip = document.createElement('div');
+      strip.className = 'reel-strip';
+      for (let r = 0; r < REEL_ROUNDS; r++) {
+        for (let n = 1; n <= MAX; n++) {
+          const cell = document.createElement('div');
+          cell.className = 'reel-cell';
+          cell.textContent = n;
+          strip.appendChild(cell);
+        }
+      }
+      viewport.appendChild(strip);
+      const stopIndex = 2 * MAX + (finalNum - 1);
+      strip.style.transform = 'translateY(0)';
+      viewport._strip = strip;
+      viewport._finalTranslate = -(stopIndex * REEL_CELL_HEIGHT);
+      viewport._resolve = null;
+      return viewport;
+    }
+
+    function runReel(reelViewport) {
+      return new Promise(function (resolve) {
+        const strip = reelViewport._strip;
+        const finalTranslate = reelViewport._finalTranslate;
+        reelViewport._resolve = resolve;
+        strip.style.transition = 'transform ' + (REEL_DURATION_MS / 1000) + 's cubic-bezier(0.15, 0.85, 0.25, 1)';
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            strip.style.transform = 'translateY(' + finalTranslate + 'px)';
+          });
+        });
+        function onEnd() {
+          strip.removeEventListener('transitionend', onEnd);
+          if (reelViewport._resolve) reelViewport._resolve();
+        }
+        strip.addEventListener('transitionend', onEnd);
+        setTimeout(function () {
+          if (reelViewport._resolve) {
+            strip.removeEventListener('transitionend', onEnd);
+            reelViewport._resolve();
+          }
+        }, REEL_DURATION_MS + 150);
+      });
+    }
+
+    async function runDraw(sets) {
+      const main = sets[0];
+      const resultArea = document.getElementById('resultArea');
+      const bonusArea = document.getElementById('bonusArea');
+      let bonusEl = bonusArea.querySelector('.ball.bonus');
+      const btn = document.getElementById('btnGenerate');
+      const resultBox = document.getElementById('resultBox');
+
+      btn.disabled = true;
+      resultBox.classList.add('drawing');
+
+      resultArea.innerHTML = '';
+      for (let i = 0; i < PICK; i++) {
+        const ph = document.createElement('span');
+        ph.className = 'ball placeholder';
+        ph.textContent = '?';
+        resultArea.appendChild(ph);
+      }
+      if (bonusEl) {
+        bonusEl.textContent = '?';
+        bonusEl.classList.add('placeholder');
+      } else {
+        bonusEl = document.createElement('span');
+        bonusEl.className = 'ball bonus placeholder';
+        bonusEl.textContent = '?';
+        bonusArea.appendChild(bonusEl);
+      }
+
+      for (let i = 0; i < PICK; i++) {
+        const slot = resultArea.children[i];
+        const num = main.numbers[i];
+        const reel = createReelStrip(num, false);
+        slot.replaceWith(reel);
+        await runReel(reel);
+        const ball = createBall(num);
+        reel.replaceWith(ball);
+      }
+
+      const bonusReel = createReelStrip(main.bonus, true);
+      bonusEl.replaceWith(bonusReel);
+      await runReel(bonusReel);
+      const bonusBall = createBonusBall(main.bonus);
+      bonusReel.replaceWith(bonusBall);
+
+      saveDrawsToSupabase(sets);
+      resultBox.classList.remove('drawing');
+      btn.disabled = false;
     }
 
     function setSaveStatus(message, isError) {
@@ -786,7 +921,10 @@
       });
     }
 
-    function runGenerate() {
+    var isDrawing = false;
+
+    async function runGenerate() {
+      if (isDrawing) return;
       const setCountInput = document.getElementById('setCount');
       const setCount = Math.min(10, Math.max(1, parseInt(setCountInput.value, 10) || 1));
       setCountInput.value = setCount;
@@ -794,8 +932,9 @@
       const sets = [];
       for (let i = 0; i < setCount; i++) sets.push(generateOneSet());
 
-      renderMainBalls(sets[0].numbers, sets[0].bonus);
-      saveDrawsToSupabase(sets);
+      isDrawing = true;
+      await runDraw(sets);
+      isDrawing = false;
 
       if (setCount > 1) {
         renderSets(sets);
