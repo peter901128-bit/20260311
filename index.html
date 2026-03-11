@@ -73,7 +73,7 @@
     }
 
     .container {
-      max-width: 460px;
+      max-width: 600px;
       margin: 0 auto;
       padding: 2rem 1.5rem 3rem;
       min-height: 100vh;
@@ -153,41 +153,81 @@
       justify-content: center;
       gap: 0;
       margin-bottom: 1rem;
+      width: 100%;
     }
     .result-box {
-      background: var(--dominos-off-white);
-      border: 2px solid var(--dominos-blue);
-      border-radius: var(--radius-sm);
-      padding: 1rem 1.25rem;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
       flex: 1;
       min-width: 0;
-    }
-
-    .result-area {
-      min-height: 48px;
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .pizza-box {
+      position: relative;
+      background: var(--dominos-red);
+      border-radius: var(--radius-sm);
+      overflow: visible;
+      min-height: 100px;
+      perspective: 420px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .pizza-box-lid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 52%;
+      background: linear-gradient(180deg, var(--dominos-red-dark) 0%, var(--dominos-red) 100%);
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      transform-origin: top center;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.34, 1.2, 0.64, 1);
+      z-index: 2;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 0.5rem;
+      box-sizing: border-box;
+    }
+    .pizza-box-lid::after {
+      content: 'HOT!';
+      font-family: 'Nunito', 'Noto Sans KR', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: 0.1em;
+    }
+    .pizza-box-lid.open {
+      transform: rotateX(-105deg);
+    }
+    .pizza-box-content {
+      position: relative;
+      z-index: 1;
+      padding: 1rem 1rem 1.1rem;
+      display: flex;
+      flex-wrap: nowrap;
       align-items: center;
       justify-content: center;
-      gap: 0.4rem;
+      gap: 0.35rem;
+      min-height: 88px;
     }
-
+    .result-area {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
     .bonus-area {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.35rem;
-      margin-top: 0;
-      padding-top: 0;
+      gap: 0.3rem;
+      margin-left: 0.4rem;
       padding-left: 0.5rem;
-      margin-left: 0.5rem;
-      border-top: none;
-      border-left: 3px solid var(--dominos-red);
+      border-left: 2px solid rgba(255,255,255,0.4);
+      flex-shrink: 0;
     }
 
     .bonus-label {
@@ -262,6 +302,26 @@
     .result-box .slot-window {
       margin: 0 2px;
     }
+    .pizza-box .slot-window {
+      background: var(--dominos-white);
+      border-color: rgba(255,255,255,0.9);
+      color: var(--dominos-red);
+    }
+    .pizza-box .slot-window.bonus {
+      background: var(--dominos-white);
+      color: var(--dominos-blue);
+      border-color: rgba(255,255,255,0.9);
+    }
+    .pizza-box .slot-window.placeholder {
+      background: rgba(255,255,255,0.4);
+      color: rgba(255,255,255,0.9);
+    }
+    .pizza-box .slot-num {
+      color: inherit;
+    }
+    .pizza-box .bonus-label {
+      color: rgba(255,255,255,0.95);
+    }
 
     .slot-lever-wrap {
       display: flex;
@@ -312,42 +372,6 @@
       background: #e0e0e0;
       color: var(--dominos-text-muted);
       font-size: 1.1rem;
-    }
-
-    .reel-viewport {
-      width: 44px;
-      height: 52px;
-      overflow: hidden;
-      border-radius: 8px;
-      border: 2px solid var(--dominos-blue);
-      background: var(--dominos-off-white);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .reel-viewport.bonus-reel {
-      background: var(--dominos-off-white);
-      border-color: var(--dominos-red);
-      color: var(--dominos-blue);
-    }
-    .reel-strip {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 44px;
-      transition: transform 0.75s cubic-bezier(0.15, 0.85, 0.25, 1);
-    }
-    .reel-cell {
-      width: 44px;
-      height: 52px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.3rem;
-      font-family: 'Nunito', 'Noto Sans KR', sans-serif;
-      color: var(--dominos-blue);
     }
 
     .ball-1 { background: var(--dominos-red); color: var(--dominos-white); }
@@ -512,7 +536,7 @@
     .lotto-2026-section {
       margin-top: 2.5rem;
       width: 100%;
-      max-width: 460px;
+      max-width: 600px;
     }
 
     .lotto-2026-title {
@@ -616,17 +640,22 @@
       <span class="field-label">추천 번호</span>
       <div class="slot-machine-panel">
         <div class="result-box" id="resultBox">
-          <div class="result-area" id="resultArea">
-            <span class="slot-window placeholder"><span class="slot-num">?</span></span>
-            <span class="slot-window placeholder"><span class="slot-num">?</span></span>
-            <span class="slot-window placeholder"><span class="slot-num">?</span></span>
-            <span class="slot-window placeholder"><span class="slot-num">?</span></span>
-            <span class="slot-window placeholder"><span class="slot-num">?</span></span>
-            <span class="slot-window placeholder"><span class="slot-num">?</span></span>
-          </div>
-          <div class="bonus-area" id="bonusArea">
-            <span class="bonus-label">보너스</span>
-            <span class="slot-window bonus placeholder"><span class="slot-num">?</span></span>
+          <div class="pizza-box" id="pizzaBox">
+            <div class="pizza-box-lid open" id="pizzaBoxLid"></div>
+            <div class="pizza-box-content">
+              <div class="result-area" id="resultArea">
+                <span class="slot-window placeholder"><span class="slot-num">?</span></span>
+                <span class="slot-window placeholder"><span class="slot-num">?</span></span>
+                <span class="slot-window placeholder"><span class="slot-num">?</span></span>
+                <span class="slot-window placeholder"><span class="slot-num">?</span></span>
+                <span class="slot-window placeholder"><span class="slot-num">?</span></span>
+                <span class="slot-window placeholder"><span class="slot-num">?</span></span>
+              </div>
+              <div class="bonus-area" id="bonusArea">
+                <span class="bonus-label">보너스</span>
+                <span class="slot-window bonus placeholder"><span class="slot-num">?</span></span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="slot-lever-wrap" id="slotLeverWrap" role="button" tabindex="0" aria-label="레버 당기기">
@@ -699,9 +728,6 @@
     const MAX = 45;
     const PICK = 6;
     const BALL_CLASSES = ['ball-1', 'ball-2', 'ball-3', 'ball-4', 'ball-5', 'ball-6'];
-    const REEL_ROUNDS = 4;
-    const REEL_CELL_HEIGHT = 52;
-    const REEL_DURATION_MS = 750;
 
     function shuffle(array) {
       const arr = [...array];
@@ -752,51 +778,8 @@
       return wrap;
     }
 
-    function createReelStrip(finalNum, isBonus) {
-      const viewport = document.createElement('div');
-      viewport.className = 'reel-viewport' + (isBonus ? ' bonus-reel' : '');
-      const strip = document.createElement('div');
-      strip.className = 'reel-strip';
-      for (let r = 0; r < REEL_ROUNDS; r++) {
-        for (let n = 1; n <= MAX; n++) {
-          const cell = document.createElement('div');
-          cell.className = 'reel-cell';
-          cell.textContent = n;
-          strip.appendChild(cell);
-        }
-      }
-      viewport.appendChild(strip);
-      const stopIndex = 2 * MAX + (finalNum - 1);
-      strip.style.transform = 'translateY(0)';
-      viewport._strip = strip;
-      viewport._finalTranslate = -(stopIndex * REEL_CELL_HEIGHT);
-      viewport._resolve = null;
-      return viewport;
-    }
-
-    function runReel(reelViewport) {
-      return new Promise(function (resolve) {
-        const strip = reelViewport._strip;
-        const finalTranslate = reelViewport._finalTranslate;
-        reelViewport._resolve = resolve;
-        strip.style.transition = 'transform ' + (REEL_DURATION_MS / 1000) + 's cubic-bezier(0.15, 0.85, 0.25, 1)';
-        requestAnimationFrame(function () {
-          requestAnimationFrame(function () {
-            strip.style.transform = 'translateY(' + finalTranslate + 'px)';
-          });
-        });
-        function onEnd() {
-          strip.removeEventListener('transitionend', onEnd);
-          if (reelViewport._resolve) reelViewport._resolve();
-        }
-        strip.addEventListener('transitionend', onEnd);
-        setTimeout(function () {
-          if (reelViewport._resolve) {
-            strip.removeEventListener('transitionend', onEnd);
-            reelViewport._resolve();
-          }
-        }, REEL_DURATION_MS + 150);
-      });
+    function sleep(ms) {
+      return new Promise(function (r) { setTimeout(r, ms); });
     }
 
     async function runDraw(sets) {
@@ -807,10 +790,12 @@
       const btn = document.getElementById('btnGenerate');
       const leverWrap = document.getElementById('slotLeverWrap');
       const resultBox = document.getElementById('resultBox');
+      const lid = document.getElementById('pizzaBoxLid');
 
       btn.disabled = true;
       if (leverWrap) leverWrap.setAttribute('aria-disabled', 'true');
       resultBox.classList.add('drawing');
+      if (lid) lid.classList.remove('open');
 
       resultArea.innerHTML = '';
       for (let i = 0; i < PICK; i++) {
@@ -829,21 +814,19 @@
         bonusArea.appendChild(bonusEl);
       }
 
+      await sleep(320);
+      if (lid) lid.classList.add('open');
+      await sleep(580);
+
       for (let i = 0; i < PICK; i++) {
         const slot = resultArea.children[i];
-        const num = main.numbers[i];
-        const reel = createReelStrip(num, false);
-        slot.replaceWith(reel);
-        await runReel(reel);
-        const win = createSlotWindow(num, false);
-        reel.replaceWith(win);
+        const win = createSlotWindow(main.numbers[i], false);
+        slot.replaceWith(win);
+        await sleep(130);
       }
 
-      const bonusReel = createReelStrip(main.bonus, true);
-      bonusEl.replaceWith(bonusReel);
-      await runReel(bonusReel);
       const bonusWin = createSlotWindow(main.bonus, true);
-      bonusReel.replaceWith(bonusWin);
+      bonusEl.replaceWith(bonusWin);
 
       saveDrawsToSupabase(sets);
       resultBox.classList.remove('drawing');
