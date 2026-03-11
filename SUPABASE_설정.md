@@ -99,5 +99,9 @@ limit 10;
 ## 7. 문제 해결
 
 - **저장이 안 돼요**: 브라우저 개발자도구(F12) → Console 탭에서 에러 확인. URL/키 오타, RLS 정책 확인.
+- **몇 개만 쌓이다가 갑자기 안 쌓여요**  
+  - 화면에 **"저장 실패: …"** 메시지가 뜨면 그 문구를 확인하세요. (예: RLS 정책 위반, 네트워크 오류 등)  
+  - **로컬에서 `index.html`만 연 경우** `/api/config`가 없어 설정이 안 불러와질 수 있습니다. **Vercel에 배포된 URL**에서 열거나, 로컬에서는 `vercel dev` 실행 후 접속하세요.  
+  - Supabase 대시보드 → Table Editor → **RLS policy**: INSERT용 정책이 **"Allow insert for all"** (with check true) 인지 확인. 위 2번 SQL을 다시 실행해도 됩니다.
 - **CORS 에러**: Supabase는 기본적으로 브라우저 요청을 허용합니다. URL이 `https://xxxxx.supabase.co` 형식인지 확인.
 - **테이블이 없어요**: 위 2번 SQL을 반드시 한 번 실행했는지 확인.

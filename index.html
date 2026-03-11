@@ -295,6 +295,15 @@
       margin-bottom: 0.5rem;
       box-shadow: 0 0 20px var(--vegas-glow-red), inset 0 1px 0 rgba(255,255,255,0.25);
     }
+    .save-status {
+      margin: 0.25rem 0 0.5rem;
+      font-size: 0.85rem;
+      color: var(--vegas-cyan);
+      min-height: 1.2em;
+    }
+    .save-status.error {
+      color: #ffb3b3;
+    }
 
     .btn-generate:hover {
       background: linear-gradient(180deg, #eb4d5c 0%, var(--vegas-sign-red-bright) 100%);
@@ -538,6 +547,7 @@
         </div>
       </div>
       <button type="button" class="btn-generate" id="btnGenerate">번호 뽑기</button>
+      <p class="save-status" id="saveStatus" aria-live="polite"></p>
 
       <div class="options">
         <div class="option-row">
@@ -624,9 +634,23 @@
       return ball;
     }
 
+    function setSaveStatus(message, isError) {
+      const el = document.getElementById('saveStatus');
+      if (!el) return;
+      el.textContent = message;
+      el.className = 'save-status' + (isError ? ' error' : '');
+      if (message) setTimeout(function () { el.textContent = ''; }, isError ? 8000 : 3000);
+    }
+
     async function saveDrawsToSupabase(sets) {
-      if (!supabaseConfig.url || !supabaseConfig.key) return;
-      if (typeof supabase === 'undefined') return;
+      if (typeof supabase === 'undefined') {
+        setSaveStatus('Supabase 로드 실패', true);
+        return;
+      }
+      if (!supabaseConfig.url || !supabaseConfig.key) {
+        setSaveStatus('연결 설정 없음 (배포 URL에서 실행 중인지 확인)', true);
+        return;
+      }
       try {
         const client = supabase.createClient(supabaseConfig.url, supabaseConfig.key);
         for (const set of sets) {
@@ -634,10 +658,16 @@
             numbers: set.numbers,
             bonus: set.bonus
           });
-          if (error) console.warn('Supabase 저장 실패:', error.message);
+          if (error) {
+            console.warn('Supabase 저장 실패:', error);
+            setSaveStatus('저장 실패: ' + (error.message || error.code || '알 수 없음'), true);
+            return;
+          }
         }
+        setSaveStatus('저장됨', false);
       } catch (e) {
-        console.warn('Supabase 연결 실패:', e.message);
+        console.warn('Supabase 연결 실패:', e);
+        setSaveStatus('저장 실패: ' + (e.message || '네트워크 오류'), true);
       }
     }
 
