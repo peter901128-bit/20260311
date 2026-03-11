@@ -796,7 +796,20 @@
     </footer>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    // Supabase 설정: Vercel 배포 시 /api/config 에서 환경 변수 로드
+    let supabaseConfig = { url: '', key: '' };
+    (function loadSupabaseConfig() {
+      fetch('/api/config')
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+        .then(function (data) {
+          supabaseConfig.url = data.supabaseUrl || '';
+          supabaseConfig.key = data.supabaseAnonKey || '';
+        })
+        .catch(function () {});
+    })();
+
     const MIN = 1;
     const MAX = 45;
     const PICK = 6;
@@ -858,6 +871,23 @@
       const el = document.getElementById('drawStatus');
       el.textContent = text;
       el.classList.toggle('empty', !text || !highlight);
+    }
+
+    async function saveDrawsToSupabase(sets) {
+      if (!supabaseConfig.url || !supabaseConfig.key) return;
+      if (typeof supabase === 'undefined') return;
+      try {
+        const client = supabase.createClient(supabaseConfig.url, supabaseConfig.key);
+        for (const set of sets) {
+          const { error } = await client.from('lotto_draws').insert({
+            numbers: set.numbers,
+            bonus: set.bonus
+          });
+          if (error) console.warn('Supabase 저장 실패:', error.message);
+        }
+      } catch (e) {
+        console.warn('Supabase 연결 실패:', e.message);
+      }
     }
 
     function sleep(ms) {
@@ -960,6 +990,8 @@
       setDrawStatus('추첨 완료!', true);
       await sleep(1400);
       setDrawStatus('', false);
+
+      saveDrawsToSupabase(sets);
 
       resultBox.classList.remove('drawing');
       btn.setAttribute('aria-disabled', 'false');
