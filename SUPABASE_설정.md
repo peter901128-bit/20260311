@@ -9,31 +9,33 @@
 
 ## 2. 테이블 생성
 
-Supabase 대시보드에서 **SQL Editor** 열고 아래 SQL 실행:
+Supabase 대시보드에서 **SQL Editor** 열고 아래 SQL **전체 복사** → 붙여넣기 → **Run** 실행.
+
+- 테이블이 **없으면** 만들고, **이미 있으면** 건너뜁니다. 여러 번 실행해도 오류 나지 않습니다.
 
 ```sql
--- 로또 추첨 기록 테이블
-create table public.lotto_draws (
+-- 테이블 (없을 때만 생성)
+create table if not exists public.lotto_draws (
   id uuid default gen_random_uuid() primary key,
-  numbers integer[] not null,   -- 본 번호 6개 (예: {10,15,19,27,30,33})
+  numbers integer[] not null,
   bonus integer not null check (bonus between 1 and 45),
   created_at timestamptz default now()
 );
 
--- 인덱스: 최신순 조회용
-create index lotto_draws_created_at_idx on public.lotto_draws (created_at desc);
+-- 인덱스 (없을 때만)
+create index if not exists lotto_draws_created_at_idx on public.lotto_draws (created_at desc);
 
--- RLS 활성화 (보안)
+-- RLS 활성화
 alter table public.lotto_draws enable row level security;
 
--- 정책: 누구나 INSERT 가능 (추첨 저장), SELECT는 누구나 가능 (내 기록 조회 등)
+-- 정책 (있으면 삭제 후 다시 생성)
+drop policy if exists "Allow insert for all" on public.lotto_draws;
 create policy "Allow insert for all"
-  on public.lotto_draws for insert
-  with check (true);
+  on public.lotto_draws for insert with check (true);
 
+drop policy if exists "Allow select for all" on public.lotto_draws;
 create policy "Allow select for all"
-  on public.lotto_draws for select
-  using (true);
+  on public.lotto_draws for select using (true);
 ```
 
 ---
@@ -50,7 +52,7 @@ create policy "Allow select for all"
 
 ## 4. Vercel 배포 시 – 환경 변수로 설정 (권장)
 
-이 프로젝트는 **Vercel 환경 변수**로 Supabase를 설정합니다. 코드에 키를 넣지 않아도 됩니다.
+Vercel에 배포했다면 **환경 변수**만 넣으면 됩니다. 코드 수정 없이 가능합니다.
 
 1. **Vercel 대시보드** → 본인 프로젝트 선택
 2. **Settings** → **Environment Variables**
@@ -61,13 +63,9 @@ create policy "Allow select for all"
 | `SUPABASE_URL` | `https://xxxxx.supabase.co` (Supabase Project URL) | Production, Preview, Development |
 | `SUPABASE_ANON_KEY` | Supabase **anon public** 키 | Production, Preview, Development |
 
-4. **Save** 후 필요하면 **Redeploy** (Deployments → ⋮ → Redeploy)
+4. **Save** 후 **Redeploy** (Deployments → ⋮ → Redeploy)
 
-동작 방식:
-- 페이지 로드 시 `/api/config`를 호출해 위 환경 변수 값을 받아옵니다.
-- 추첨 완료 시 그 값으로 Supabase에 저장합니다.
-
-**로컬에서 테스트:** 터미널에서 `vercel dev` 실행 후 접속하면 같은 환경 변수를 사용합니다. `.env.local`에 `SUPABASE_URL`, `SUPABASE_ANON_KEY`를 넣어도 됩니다.
+로컬 테스트: `vercel dev` 실행 후 접속하거나, `.env.local`에 같은 변수 추가.
 
 ---
 
