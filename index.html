@@ -9,16 +9,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
+      /* 도미노 2024년 11월~ 신규 브랜드 색상 (더 밝은 레드·블루) */
       --dominos-red: #E31837;
       --dominos-red-dark: #c41430;
-      --dominos-blue: #006491;
-      --dominos-blue-bright: #0072BC;
+      --dominos-red-bright: #FF3B5C;
+      --dominos-blue: #0079C2;
+      --dominos-blue-bright: #0193E8;
+      --dominos-blue-dark: #006492;
       --dominos-white: #FFFFFF;
-      --dominos-off-white: #F5F5F5;
+      --dominos-off-white: #F0F7FC;
       --dominos-black: #1a1a1a;
       --dominos-gold: #C4A035;
-      --dominos-text: #333333;
-      --dominos-text-muted: #666666;
+      --dominos-text: #1a1a1a;
+      --dominos-text-muted: #555555;
       --radius: 12px;
       --radius-sm: 8px;
     }
@@ -31,7 +34,7 @@
 
     body {
       font-family: 'Nunito', 'Noto Sans KR', -apple-system, sans-serif;
-      background: var(--dominos-off-white);
+      background: var(--dominos-blue);
       min-height: 100vh;
       color: var(--dominos-text);
       overflow-x: hidden;
@@ -42,9 +45,7 @@
       content: '';
       position: fixed;
       inset: 0;
-      background:
-        linear-gradient(135deg, rgba(227, 24, 55, 0.04) 0%, transparent 50%),
-        linear-gradient(225deg, rgba(0, 100, 145, 0.05) 0%, transparent 50%);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 30%);
       pointer-events: none;
       z-index: 0;
     }
@@ -55,18 +56,17 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      border-bottom: 3px solid var(--dominos-blue);
-      background: var(--dominos-white);
+      border-bottom: 3px solid rgba(255,255,255,0.25);
+      background: var(--dominos-blue);
       position: relative;
       z-index: 1;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
     .lang {
       font-family: 'Nunito', 'Noto Sans KR', sans-serif;
       font-size: 0.9rem;
       font-weight: 700;
-      color: var(--dominos-blue);
+      color: var(--dominos-white);
       background: none;
       border: none;
       cursor: pointer;
@@ -93,7 +93,7 @@
       font-family: 'Nunito', 'Noto Sans KR', sans-serif;
       font-size: 1rem;
       font-weight: 700;
-      color: var(--dominos-red);
+      color: var(--dominos-white);
       margin-bottom: 0.2rem;
       letter-spacing: 0.05em;
     }
@@ -103,7 +103,7 @@
       font-weight: 800;
       font-size: 3rem;
       letter-spacing: 0.08em;
-      color: var(--dominos-blue);
+      color: var(--dominos-white);
       line-height: 1;
     }
 
@@ -112,17 +112,17 @@
       font-size: 0.9rem;
       font-weight: 700;
       letter-spacing: 0.2em;
-      color: var(--dominos-text-muted);
+      color: rgba(255,255,255,0.9);
       margin-top: 0.25rem;
     }
 
     .card {
       background: var(--dominos-white);
-      border: 3px solid var(--dominos-blue);
+      border: 3px solid rgba(255,255,255,0.5);
       border-radius: var(--radius);
       padding: 2rem 2.25rem;
       width: 100%;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
       position: relative;
     }
 
@@ -384,70 +384,6 @@
       color: var(--dominos-red);
     }
 
-    .local-config-wrap {
-      margin: 0.75rem 0;
-      padding: 0.75rem;
-      background: var(--dominos-off-white);
-      border-radius: var(--radius);
-      border: 2px solid var(--dominos-blue);
-    }
-    .local-config-wrap.hidden {
-      display: none !important;
-    }
-    .toggle-local-config {
-      margin-left: 0.5rem;
-      font-size: 0.75rem;
-      color: var(--dominos-text-muted);
-      background: none;
-      border: none;
-      cursor: pointer;
-      text-decoration: underline;
-      font-weight: 700;
-    }
-    .toggle-local-config:hover {
-      color: var(--dominos-blue);
-    }
-    .local-config-summary {
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 800;
-      color: var(--dominos-blue);
-    }
-    .local-config-desc {
-      margin: 0.5rem 0 0.6rem;
-      font-size: 0.8rem;
-      color: var(--dominos-text-muted);
-      line-height: 1.4;
-    }
-    .local-config-fields label {
-      display: block;
-      margin-top: 0.5rem;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--dominos-text);
-    }
-    .local-config-fields input {
-      width: 100%;
-      margin-top: 0.25rem;
-      padding: 0.4rem 0.5rem;
-      font-size: 0.85rem;
-      background: var(--dominos-white);
-      border: 2px solid #ddd;
-      border-radius: var(--radius-sm);
-      color: var(--dominos-text);
-    }
-    .local-config-fields .btn-local-save {
-      margin-top: 0.6rem;
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      font-weight: 700;
-      background: var(--dominos-red);
-      color: var(--dominos-white);
-      border: 2px solid var(--dominos-red-dark);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-    }
-
     .btn-generate:hover {
       background: var(--dominos-red-dark);
       box-shadow: 0 4px 12px rgba(227, 24, 55, 0.3);
@@ -566,7 +502,7 @@
       font-family: 'Nunito', 'Noto Sans KR', sans-serif;
       font-size: 0.8rem;
       font-weight: 700;
-      color: var(--dominos-text-muted);
+      color: rgba(255,255,255,0.9);
     }
 
     .page-footer .divider {
@@ -583,17 +519,17 @@
       font-family: 'Nunito', 'Noto Sans KR', sans-serif;
       font-size: 1rem;
       font-weight: 800;
-      color: var(--dominos-blue);
+      color: var(--dominos-white);
       margin-bottom: 0.75rem;
       padding-bottom: 0.35rem;
-      border-bottom: 3px solid var(--dominos-red);
+      border-bottom: 3px solid rgba(255,255,255,0.4);
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
 
     .lotto-2026-meta {
       font-size: 0.75rem;
-      color: var(--dominos-text-muted);
+      color: rgba(255,255,255,0.85);
       margin-bottom: 0.6rem;
     }
 
@@ -634,7 +570,7 @@
       font-size: 0.85rem;
       font-weight: 800;
       letter-spacing: 0.05em;
-      color: var(--dominos-red);
+      color: var(--dominos-white);
       min-width: 4rem;
       flex-shrink: 0;
     }
@@ -644,7 +580,7 @@
       font-size: 0.7rem;
       font-weight: 700;
       letter-spacing: 0.05em;
-      color: var(--dominos-blue);
+      color: rgba(255,255,255,0.9);
       min-width: 3.8rem;
       flex-shrink: 0;
     }
@@ -659,7 +595,7 @@
     .lotto-recent-row .bonus-label {
       font-size: 0.65rem;
       margin: 0 0.1rem;
-      color: var(--dominos-text-muted);
+      color: rgba(255,255,255,0.8);
       flex-shrink: 0;
     }
   </style>
@@ -699,19 +635,6 @@
       </div>
       <button type="button" class="btn-generate" id="btnGenerate">번호 뽑기</button>
       <p class="save-status" id="saveStatus" aria-live="polite"></p>
-      <button type="button" class="toggle-local-config" id="toggleLocalConfig" aria-label="로컬 설정 보기">로컬 설정</button>
-
-      <details class="local-config-wrap hidden" id="localConfigWrap">
-        <summary class="local-config-summary">로컬 설정 (배포 없이 저장 테스트용)</summary>
-        <p class="local-config-desc">Vercel 배포 주소가 아니면 서버 설정이 없어서 이곳에 한 번 입력해 두면 됩니다. 이 기기 브라우저에만 저장됩니다.</p>
-        <div class="local-config-fields">
-          <label for="localSupabaseUrl">Supabase URL</label>
-          <input type="url" id="localSupabaseUrl" placeholder="https://xxxxx.supabase.co">
-          <label for="localSupabaseKey">Anon Key</label>
-          <input type="password" id="localSupabaseKey" placeholder="eyJhbGc...">
-          <button type="button" class="btn-local-save" id="btnLocalConfigSave">저장</button>
-        </div>
-      </details>
 
       <div class="options">
         <div class="option-row">
@@ -935,10 +858,6 @@
       if (!el) return;
       el.textContent = message;
       el.className = 'save-status' + (isError ? ' error' : '');
-      if (message && message.indexOf('연결 설정 없음') !== -1) {
-        var wrap = document.getElementById('localConfigWrap');
-        if (wrap) { wrap.classList.remove('hidden'); wrap.open = true; }
-      }
       if (message) setTimeout(function () { el.textContent = ''; }, isError ? 8000 : 3000);
     }
 
@@ -1046,45 +965,6 @@
       wrap.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onLeverActivate(); }
       });
-    })();
-
-    (function initLocalConfig() {
-      try {
-        var wrap = document.getElementById('localConfigWrap');
-        var toggleBtn = document.getElementById('toggleLocalConfig');
-        if (toggleBtn && wrap) {
-          toggleBtn.addEventListener('click', function () {
-            wrap.classList.toggle('hidden');
-            if (!wrap.classList.contains('hidden')) wrap.open = true;
-          });
-        }
-        var u = localStorage.getItem('supabaseUrl');
-        var k = localStorage.getItem('supabaseAnonKey');
-        var urlInput = document.getElementById('localSupabaseUrl');
-        var keyInput = document.getElementById('localSupabaseKey');
-        if (urlInput && u) urlInput.value = u;
-        if (keyInput && k) keyInput.value = k;
-        var btn = document.getElementById('btnLocalConfigSave');
-        if (btn) {
-          btn.addEventListener('click', function () {
-            var url = (urlInput && urlInput.value || '').trim();
-            var key = (keyInput && keyInput.value || '').trim();
-            if (!url || !key) {
-              setSaveStatus('URL과 Anon Key를 모두 입력하세요', true);
-              return;
-            }
-            try {
-              localStorage.setItem('supabaseUrl', url);
-              localStorage.setItem('supabaseAnonKey', key);
-              supabaseConfig.url = url;
-              supabaseConfig.key = key;
-              setSaveStatus('로컬 설정 저장됨. 이제 번호 뽑기 후 저장됩니다.', false);
-            } catch (e) {
-              setSaveStatus('저장 실패: ' + (e.message || ''), true);
-            }
-          });
-        }
-      } catch (e) {}
     })();
 
     // 최근 10회 1등 당첨번호 (웹 검색 기준)
