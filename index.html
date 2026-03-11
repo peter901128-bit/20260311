@@ -305,6 +305,51 @@
       color: #ffb3b3;
     }
 
+    .local-config-wrap {
+      margin: 0.75rem 0;
+      padding: 0.75rem;
+      background: rgba(0,0,0,0.25);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .local-config-summary {
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--vegas-cyan);
+    }
+    .local-config-desc {
+      margin: 0.5rem 0 0.6rem;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.4;
+    }
+    .local-config-fields label {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.9);
+    }
+    .local-config-fields input {
+      width: 100%;
+      margin-top: 0.25rem;
+      padding: 0.4rem 0.5rem;
+      font-size: 0.85rem;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 4px;
+      color: var(--vegas-white);
+    }
+    .local-config-fields .btn-local-save {
+      margin-top: 0.6rem;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      background: var(--vegas-sign-red);
+      color: var(--vegas-white);
+      border: 1px solid var(--vegas-gold);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
     .btn-generate:hover {
       background: linear-gradient(180deg, #eb4d5c 0%, var(--vegas-sign-red-bright) 100%);
       box-shadow: 0 0 30px var(--vegas-glow-red);
@@ -549,6 +594,18 @@
       <button type="button" class="btn-generate" id="btnGenerate">번호 뽑기</button>
       <p class="save-status" id="saveStatus" aria-live="polite"></p>
 
+      <details class="local-config-wrap" id="localConfigWrap">
+        <summary class="local-config-summary">로컬 설정 (배포 없이 저장 테스트용)</summary>
+        <p class="local-config-desc">Vercel 배포 주소가 아니면 서버 설정이 없어서 이곳에 한 번 입력해 두면 됩니다. 이 기기 브라우저에만 저장됩니다.</p>
+        <div class="local-config-fields">
+          <label for="localSupabaseUrl">Supabase URL</label>
+          <input type="url" id="localSupabaseUrl" placeholder="https://xxxxx.supabase.co">
+          <label for="localSupabaseKey">Anon Key</label>
+          <input type="password" id="localSupabaseKey" placeholder="eyJhbGc...">
+          <button type="button" class="btn-local-save" id="btnLocalConfigSave">저장</button>
+        </div>
+      </details>
+
       <div class="options">
         <div class="option-row">
           <label for="setCount">한 번에 생성할 세트 수</label>
@@ -578,16 +635,34 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Supabase 설정: Vercel 배포 시 /api/config 에서 환경 변수 로드
+    // Supabase 설정: Vercel 배포 시 /api/config, 로컬은 localStorage 로컬 설정 사용
     let supabaseConfig = { url: '', key: '' };
+    function applyLocalConfig() {
+      try {
+        var u = localStorage.getItem('supabaseUrl');
+        var k = localStorage.getItem('supabaseAnonKey');
+        if (u && k) {
+          supabaseConfig.url = u;
+          supabaseConfig.key = k;
+        }
+      } catch (e) {}
+    }
     (function loadSupabaseConfig() {
       fetch('/api/config')
         .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
         .then(function (data) {
-          supabaseConfig.url = data.supabaseUrl || '';
-          supabaseConfig.key = data.supabaseAnonKey || '';
+          var u = (data.supabaseUrl || '').trim();
+          var k = (data.supabaseAnonKey || '').trim();
+          if (u && k) {
+            supabaseConfig.url = u;
+            supabaseConfig.key = k;
+            return;
+          }
+          applyLocalConfig();
         })
-        .catch(function () {});
+        .catch(function () {
+          applyLocalConfig();
+        });
     })();
 
     const MIN = 1;
@@ -639,6 +714,10 @@
       if (!el) return;
       el.textContent = message;
       el.className = 'save-status' + (isError ? ' error' : '');
+      if (message && message.indexOf('연결 설정 없음') !== -1) {
+        var wrap = document.getElementById('localConfigWrap');
+        if (wrap) wrap.open = true;
+      }
       if (message) setTimeout(function () { el.textContent = ''; }, isError ? 8000 : 3000);
     }
 
@@ -727,6 +806,37 @@
     }
 
     document.getElementById('btnGenerate').addEventListener('click', runGenerate);
+
+    (function initLocalConfig() {
+      try {
+        var u = localStorage.getItem('supabaseUrl');
+        var k = localStorage.getItem('supabaseAnonKey');
+        var urlInput = document.getElementById('localSupabaseUrl');
+        var keyInput = document.getElementById('localSupabaseKey');
+        if (urlInput && u) urlInput.value = u;
+        if (keyInput && k) keyInput.value = k;
+        var btn = document.getElementById('btnLocalConfigSave');
+        if (btn) {
+          btn.addEventListener('click', function () {
+            var url = (urlInput && urlInput.value || '').trim();
+            var key = (keyInput && keyInput.value || '').trim();
+            if (!url || !key) {
+              setSaveStatus('URL과 Anon Key를 모두 입력하세요', true);
+              return;
+            }
+            try {
+              localStorage.setItem('supabaseUrl', url);
+              localStorage.setItem('supabaseAnonKey', key);
+              supabaseConfig.url = url;
+              supabaseConfig.key = key;
+              setSaveStatus('로컬 설정 저장됨. 이제 번호 뽑기 후 저장됩니다.', false);
+            } catch (e) {
+              setSaveStatus('저장 실패: ' + (e.message || ''), true);
+            }
+          });
+        }
+      } catch (e) {}
+    })();
 
     // 최근 10회 1등 당첨번호 (웹 검색 기준)
     const LOTTO_RECENT_10 = [
